@@ -1,3 +1,9 @@
+/**
+ * ============================
+ * Inversions counter algorithm
+ * ============================
+ */
+
 function mergeAndCountInversions(left, right) {
   const mergedArray = [];
 
