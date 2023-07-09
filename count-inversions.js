@@ -2,7 +2,27 @@
  * ============================
  * Inversions counter algorithm
  * ============================
+ *
+ * You can use integers-list.txt file to test the algorithm
+ * The file contains all of the 100,000 integers between 1 and 100,000 (inclusive)
+ * in some order, with no integer repeated.
  */
+const fs = require("fs");
+
+function isPathFile(path) {
+  const pathStats = fs.statSync(path);
+
+  return pathStats.isFile();
+}
+
+function extractArrayIntegersFromFile(filePath) {
+  /**
+   * File should contain lines with a single integer
+   */
+  const file = fs.readFileSync(filePath, "utf8");
+
+  return file.split("\n").map((line) => parseInt(line, 10));
+}
 
 function mergeAndCountInversions(left, right) {
   const mergedArray = [];
@@ -73,22 +93,26 @@ function countInversions(array) {
 }
 
 function parseArgs() {
-  const arrayInString = process.argv[2];
+  const integersString = process.argv[2];
 
-  if (!arrayInString) {
+  if (!integersString) {
     throw new Error(
-      `No array arguments given: Call with format "[1,2,3,4, ..., n]"`
+      `No array arguments given: Call with format "[1,2,3,4, ..., n]" or pass path to file that contains integer per line`
     );
   }
 
   try {
-    const array = JSON.parse(arrayInString);
+    if (isPathFile(integersString)) {
+      return extractArrayIntegersFromFile(integersString);
+    }
+
+    const array = JSON.parse(integersString);
 
     return array;
   } catch (err) {
     if (err instanceof SyntaxError) {
       throw new Error(
-        `Invalid arguments given: Only call with format "[1,2,3,4, ..., n]"`
+        `Invalid arguments given: Only call with format "[1,2,3,4, ..., n]" or pass path to file that contains integer per line`
       );
     }
 
